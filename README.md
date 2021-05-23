@@ -3,7 +3,7 @@
 This script sends you a daily routine designed around sunrise and sunset timings of your location!
 
 ## Steps
-1. Since this script sends a message to Telegram, you need to set Telegram specific tokens in your environment variables
+1. Since this script sends a message to Telegram using a Telegram bot, you need to set Telegram specific tokens in your environment variables. Create your Telegram bot and then:
 
     `export TELEGRAM_BOT_TOKEN=<your telegram bot token>`
   
