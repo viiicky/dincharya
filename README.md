@@ -1,6 +1,7 @@
 # dincharya
 
 This script sends you a daily routine designed around sunrise and sunset timings of your location!
+
 Inspired from https://youtu.be/6ZUFT0CwU1w, https://youtu.be/0vGWYrIpoII and https://www.notion.so/Dincharya-Lifestyle-Life-management-by-Swami-Ramdev-c068630599114c9db7202ebe29f40322
 
 ## Steps
