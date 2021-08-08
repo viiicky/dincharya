@@ -68,4 +68,4 @@ if __name__ == '__main__':
 
     routine_output = f"\ntomorrow's({tomorrow}) routine:\n{tabulate(routine)}"
     print(routine_output)
-    # send_telegram(checkpoints_output)
+    send_telegram(routine_output)
