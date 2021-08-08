@@ -21,80 +21,51 @@ def send_telegram(message):
 if __name__ == '__main__':
     city = LocationInfo(*LOCATION)
 
+    thirty_minutes = timedelta(minutes=30)
+    one_hour = timedelta(hours=1)
+    ninety_six_minutes = timedelta(minutes=96)
+    two_hours = timedelta(hours=2)
+    two_and_a_half_hours = timedelta(hours=2.5)
+    four_hours = timedelta(hours=4)
+    six_hours = timedelta(hours=6)
     one_day = timedelta(days=1)
     two_days = timedelta(days=2)
-    ninety_six_minutes = timedelta(minutes=96)
-    forty_eight_minutes = timedelta(minutes=48)
-    seven_and_a_half_hours = timedelta(hours=7.5)
-    two_hours = timedelta(hours=2)
-    one_hour = timedelta(hours=1)
-    four_hours = timedelta(hours=4)
-    one_hour_twenty_minutes = timedelta(hours=1, minutes=20)
 
-    DATE_FORMAT = '%Y-%m-%d %H:%M'
+    tomorrow, day_after_tomorrow = date.today() + one_day, date.today() + two_days
 
-    today, tomorrow, day_after_tomorrow = date.today(), date.today() + one_day, date.today() + two_days  # idk, for some reason today, tomorrow, day after tomorrow, reminds me of the song Amar, Akbar, Anthony - may be because it's rhyming, is it?
-    print(f'today: {today}; tomorrow: {tomorrow}; day_after_tomorrow: {day_after_tomorrow}')
+    sun_tomorrow = sun(city.observer, date=tomorrow, tzinfo=city.timezone)
+    sunrise, sunset = sun_tomorrow['sunrise'], sun_tomorrow['sunset']   # Eating window
 
-    # let's create tomorrow's dincharya below #
+    # let's create tomorrow's routine below #
     routine = []
+    DATE_FORMAT = '%Y-%m-%d %H:%M'
+    
+    wake_up_time = sunrise - ninety_six_minutes    # Start of Brahmamuhurtha. Any Muhurtha is 48 mins long.
+    routine.append(('wake_up_time', wake_up_time.strftime(DATE_FORMAT)))
+    
+    # self: yoga-abhyas, pranayam, dhyaan etc. -> 2 hours
+    self_time_range = (wake_up_time + thirty_minutes).strftime(DATE_FORMAT), (wake_up_time + two_and_a_half_hours).strftime(DATE_FORMAT)
+    routine.append(('self_time_range', self_time_range))
 
-    # find when to wake up tomorrow
-    sunrise = sun(city.observer, date=tomorrow, tzinfo=city.timezone)['sunrise']
-    print(f"\ntomorrow's sunrise: {sunrise}")
-    wake_up_range = (sunrise - ninety_six_minutes).strftime(DATE_FORMAT), (sunrise - forty_eight_minutes).strftime(
-        DATE_FORMAT)    # this period is what is referred as 'Brahmamuhurtha'
-
-    # find when to sleep tomorrow
-    day_after_tomorrow_sunrise = sun(city.observer, date=day_after_tomorrow, tzinfo=city.timezone)['sunrise']
-    day_after_tomorrow_wake_up_range = day_after_tomorrow_sunrise - ninety_six_minutes, day_after_tomorrow_sunrise - forty_eight_minutes
-    sleep_time = day_after_tomorrow_wake_up_range[0] - seven_and_a_half_hours
-    routine.append(('sleep_time', sleep_time.strftime(DATE_FORMAT)))
-
-    # based on tomorrow's sleep time, calculate strategic checkpoints for tomorrow, specially "around time-sink" items
-    dinner_time = sleep_time - two_hours
-    routine.append(('dinner_time', dinner_time.strftime(DATE_FORMAT)))
-
-    evening_recreation_time = dinner_time - one_hour  # well, need to start with something, huh - 1 hour seems decent
-    routine.append(('evening_recreation_time', evening_recreation_time.strftime(DATE_FORMAT)))
-
-    resume_work_time = evening_recreation_time - four_hours
-    routine.append(('resume_work_time', resume_work_time.strftime(DATE_FORMAT)))
-
-    lunch_time = resume_work_time - one_hour
+    # food
+    breakfast_time, lunch_time, dinner_time = sunrise + one_hour, sun_tomorrow['noon'], sunset - thirty_minutes
+    routine.append(('breakfast_time', breakfast_time.strftime(DATE_FORMAT)))    # this is the minimum time, can eat anytime post this
     routine.append(('lunch_time', lunch_time.strftime(DATE_FORMAT)))
 
-    start_work_time = lunch_time - four_hours
-    routine.append(('start_work_time', start_work_time.strftime(DATE_FORMAT)))
+    # family -> 2 hours
+    family_time_range = (dinner_time - two_hours).strftime(DATE_FORMAT), dinner_time.strftime(DATE_FORMAT)
+    routine.append(('family_time_range', family_time_range))
 
-    bath_time = start_work_time - one_hour_twenty_minutes  # no no, I am not going to take 1 hour 20 minutes for bath :D; remember, I am just putting checkpoints for strategic items - the slot itself has lot of other items in it to be finished
-    routine.append(('bath_time', bath_time.strftime(DATE_FORMAT)))
+    routine.append(('dinner_time', dinner_time.strftime(DATE_FORMAT)))
+    
+    # sleep (includes sex) -> 6 hours
+    day_after_tomorrow_sunrise = sun(city.observer, date=day_after_tomorrow, tzinfo=city.timezone)['sunrise']
+    day_after_tomorrow_wake_up_time = day_after_tomorrow_sunrise - ninety_six_minutes   # Start of Brahmamuhurtha. Any Muhurtha is 48 mins long.
+    sleep_time_range = (day_after_tomorrow_wake_up_time - six_hours).strftime(DATE_FORMAT), (day_after_tomorrow_wake_up_time).strftime(DATE_FORMAT)
+    routine.append(('sleep_time_range', sleep_time_range))
 
-    routine.append(('wake_up_range', wake_up_range))
+    # work -> 14 hours (basically, everything else from above is work)
 
-    checkpoints_output = f"\ntomorrow's({tomorrow}) checkpoints:\n{tabulate(routine[::-1])}"
-    print(checkpoints_output)
-    send_telegram(checkpoints_output)
-
-    all_activities = [
-        'wake_up',
-        'fresh_up',
-        'wash_face_and_eyes',
-        'brush',
-        'physical_activity',
-        '*---30 MINS GAP---*',
-        'bath',
-        'meditate',
-        'breakfast',
-        '*---30 MINS GAP---*',
-        'work',
-        'lunch',
-        'resume_work',
-        'evening_recreation',
-        'dinner',
-        '*---2 HOURS GAP---*',
-        'ratricharya'
-    ]
-    all_activities_output = f'\nall activities:\n{tabulate(enumerate(all_activities))}'
-    print(all_activities_output)
-    # send_telegram(all_activities_output)
+    routine_output = f"\ntomorrow's({tomorrow}) routine:\n{tabulate(routine)}"
+    print(routine_output)
+    # send_telegram(checkpoints_output)
