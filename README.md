@@ -20,8 +20,14 @@ Inspired from https://youtu.be/6ZUFT0CwU1w, https://youtu.be/0vGWYrIpoII and htt
     The last two values are latitude, longitude.
   
     The first two values represent name and region respectively, and can be anything.
+
+3. For events to be created on the Google Calendar:
+    
+    You need to have `credentials.json` in the root of this project. You can create a Desktop application credentials by referring to https://developers.google.com/workspace/guides/create-credentials
+
+    Also `export CALENDAR_ID={your-email-here}` to set the destination calendar. If not set, it will use the primary calendar of the logged in user.
   
-3. Set up virtual env
+4. Set up virtual env
 
     `cd <root of this repo>`
   
@@ -29,7 +35,7 @@ Inspired from https://youtu.be/6ZUFT0CwU1w, https://youtu.be/0vGWYrIpoII and htt
   
     `pip install -r requirements.txt`
 
-4. Run
+5. Run
 
     `source <virtual-env-name>/bin/activate`
     
@@ -37,4 +43,4 @@ Inspired from https://youtu.be/6ZUFT0CwU1w, https://youtu.be/0vGWYrIpoII and htt
 
 You can also put this script as a cronjob to send you daily routines. An example of that can be:
 
-`0 17 * * * ~/dincharya/dincharya-env/bin/python ~/dincharya/routine.py >> ~/logs/dincharya/routine.out`
+`0 2 * * * ~/dincharya/dincharya-env/bin/python ~/dincharya/routine.py >> ~/logs/dincharya/routine.out`
