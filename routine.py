@@ -79,7 +79,6 @@ if __name__ == '__main__':
     ninety_six_minutes = timedelta(minutes=96)
     two_hours = timedelta(hours=2)
     two_and_a_half_hours = timedelta(hours=2.5)
-    four_hours = timedelta(hours=4)
     six_hours = timedelta(hours=6)
     one_day = timedelta(days=1)
     two_days = timedelta(days=2)
@@ -120,5 +119,3 @@ if __name__ == '__main__':
 
     send_telegram(routine)
     create_calendar_events(routine)
-
-    # TODO: update the cron to daily 2 AM
