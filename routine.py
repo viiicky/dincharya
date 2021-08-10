@@ -75,10 +75,10 @@ if __name__ == '__main__':
     city = LocationInfo(*LOCATION)
 
     thirty_minutes = timedelta(minutes=30)
-    one_hour = timedelta(hours=1)
+    one_and_a_half_hours = timedelta(hours=1.5)
     ninety_six_minutes = timedelta(minutes=96)
     two_hours = timedelta(hours=2)
-    two_and_a_half_hours = timedelta(hours=2.5)
+    three_and_a_half_hours = timedelta(hours=3.5)
     six_hours = timedelta(hours=6)
     one_day = timedelta(days=1)
     two_days = timedelta(days=2)
@@ -88,6 +88,12 @@ if __name__ == '__main__':
     sun_tomorrow = sun(city.observer, date=tomorrow, tzinfo=city.timezone)
     sunrise, sunset = sun_tomorrow['sunrise'], sun_tomorrow['sunset']   # Eating window
 
+    first_meal = sunrise + three_and_a_half_hours   # first meal post sunrise
+    last_meal = sunset - thirty_minutes # last meal before sunset
+    no_of_meals = 4 # total number of meals during the eating window
+
+    meal_gap = (last_meal - first_meal) / (no_of_meals - 1)
+
     # let's create tomorrow's routine below #
     routine = []
     
@@ -95,13 +101,15 @@ if __name__ == '__main__':
     routine.append(('wake_up_time', (wake_up_time,)))
     
     # self: yoga-abhyas, pranayam, dhyaan etc. -> 2 hours
-    self_time_range = wake_up_time + thirty_minutes, wake_up_time + two_and_a_half_hours
+    self_time_range = wake_up_time + one_and_a_half_hours, wake_up_time + three_and_a_half_hours
     routine.append(('self_time_range', self_time_range))
 
     # food
-    breakfast_time, lunch_time, dinner_time = sunrise + one_hour, sun_tomorrow['noon'], sunset - thirty_minutes
-    routine.append(('breakfast_time', (breakfast_time,)))    # this is the minimum time, can eat anytime post this
+    breakfast_time, lunch_time, snacks_time, dinner_time = first_meal, first_meal + meal_gap, first_meal + 2*meal_gap, first_meal + 3*meal_gap 
+    
+    routine.append(('breakfast_time', (breakfast_time,)))
     routine.append(('lunch_time', (lunch_time,)))
+    routine.append(('snacks_time', (snacks_time,)))
 
     # family -> 2 hours
     family_time_range = dinner_time - two_hours, dinner_time
