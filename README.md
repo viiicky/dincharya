@@ -13,7 +13,7 @@ Inspired from https://youtu.be/6ZUFT0CwU1w, https://youtu.be/0vGWYrIpoII and htt
   
 2. You also need to set the location env. An example location value could be:
 
-    `export LOCATION=["Morar","Gwalior","Asia/Kolkata",26.24074743965471,78.22283739759605]`
+    `export LOCATION='["Morar","Gwalior","Asia/Kolkata",26.24074743965471,78.22283739759605]'`
   
     Here `Asia/Kolkata` represents the timezone, so it must be a valid input. List of timezones can be obtained from `pytz.all_timezones`
   
